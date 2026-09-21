@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <script src="../js/auth.js"></script>
+  <script>FitnesGymAuth.requireAuth();</script>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>FitnesGym — Gestión de Planes</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+    .editorial-input {
+      background-color: #0e0e11;
+      color: #e4e1e6;
+      border: 1px solid #2e2e38;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+    .editorial-input:focus {
+      outline: none;
+      border-color: #4edea3;
+      box-shadow: 0 0 0 1px #4edea3;
+    }
+  </style>
+  <link href="../css/styles.css" rel="stylesheet"/>
+  <script src="../js/theme.js"></script>
+  <script>tailwind.config = window.FITNESSGYM_THEME;</script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-background font-body-md text-body-md text-on-surface antialiased">
+
+  <div id="app-shell"></div>
+
+  <div class="md:pl-64">
+    <!-- Top Header -->
+    <header class="fixed top-0 right-0 left-0 md:left-64 h-16 z-40 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/20 flex items-center justify-between gap-space-md px-gutter-desktop">
+      <div class="flex items-center gap-space-sm">
+        <a href="index.html" class="flex items-center gap-1.5 font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors">
+          <span class="material-symbols-outlined text-[18px]">arrow_back</span><span>Inicio</span>
+        </a>
+        <span class="text-outline/60">/</span>
+        <a href="gestion-socios.html" class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors">G. Socios</a>
+        <span class="text-outline/60">/</span>
+        <span class="font-label-md text-label-md text-on-surface font-semibold">Gestión de Planes</span>
+      </div>
+      <div class="hidden sm:flex items-center gap-space-xs px-space-sm py-space-xs bg-surface-container rounded-lg">
+        <span class="font-label-sm text-label-sm text-on-surface tracking-widest uppercase">Config &bull; Planes</span>
+      </div>
+    </header>
+
+    <!-- Main -->
+    <main class="w-full min-h-screen bg-surface pt-32 md:pt-16 px-gutter-desktop py-space-lg">
+      <div class="flex flex-col w-full gap-space-md max-w-4xl mx-auto">
+
+        <!-- Title & Module Header -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+          <div class="flex flex-col gap-space-xs">
+            <div class="flex items-center gap-space-sm">
+              <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Gestión de Planes</h1>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-primary-container text-on-primary-container">Membresías</span>
+            </div>
+            <p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">Creá, editá y desactivá los planes de membresía disponibles para los socios.</p>
+          </div>
+          <button onclick="abrirModalCrear()" class="inline-flex items-center justify-center gap-2 px-5 h-11 rounded-lg bg-primary text-on-primary font-label-md text-label-md font-bold uppercase tracking-wide hover:bg-primary-fixed transition-all shadow-sm active:scale-[0.98] cursor-pointer">
+            <span class="material-symbols-outlined text-[18px]">add</span>
+            Nuevo Plan
+          </button>
+        </div>
+
+        <!-- Feedback Message Container -->
+        <div id="mensaje-resultado" class="hidden my-4 p-4 rounded-lg text-xs font-mono tracking-wide flex items-center justify-between border"></div>
+
+        <!-- Planes Table -->
+        <div class="bg-surface-container-low rounded-lg overflow-hidden shadow-sm">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-surface-container-lowest text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+                  <th class="py-space-sm px-space-md w-16">ID</th>
+                  <th class="py-space-sm px-space-md">Nombre</th>
+                  <th class="py-space-sm px-space-md">Duración</th>
+                  <th class="py-space-sm px-space-md">Precio</th>
+                  <th class="py-space-sm px-space-md text-center">Estado</th>
+                  <th class="py-space-sm px-space-md text-right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="planes-container" class="divide-y divide-surface-container text-sm">
+                <tr>
+                  <td colspan="6" class="py-6 text-center text-on-surface-variant">Cargando planes...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="px-space-md py-space-sm bg-surface-container-lowest border-t border-outline-variant/20 flex items-center gap-2 text-xs text-on-surface-variant">
+            <span class="h-2 w-2 rounded-full bg-tertiary inline-block"></span>
+            <span>Los precios y duración pueden editarse en cualquier momento.</span>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- MODAL: CREAR / EDITAR PLAN -->
+  <div id="modal-plan" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-surface-container border border-outline-variant/40 w-full max-w-md rounded-lg shadow-2xl overflow-hidden">
+
+      <div class="px-space-lg py-space-md border-b border-outline-variant/20 flex items-center justify-between bg-surface-container-highest">
+        <div>
+          <span class="font-label-sm text-label-sm text-on-surface-variant tracking-[0.2em] uppercase">Config &bull; Plan</span>
+          <h3 class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight mt-0.5" id="modal-titulo">Nuevo Plan</h3>
+        </div>
+        <button onclick="cerrarModal()" class="w-8 h-8 rounded-lg bg-surface-container-highest hover:bg-surface-bright text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors cursor-pointer">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+
+      <form id="plan-form" onsubmit="guardarPlan(event)" class="p-space-lg space-y-5">
+        <input type="hidden" id="plan-id-editing">
+
+        <div>
+          <label class="block font-label-sm text-label-sm uppercase tracking-wider text-on-surface font-medium mb-1.5" for="plan-nombre">
+            Nombre del Plan <span class="text-secondary">*</span>
+          </label>
+          <input type="text" id="plan-nombre" required maxlength="50" placeholder="Ej: Mensual" class="editorial-input w-full px-4 py-3 text-sm placeholder:text-on-surface-variant/50">
+        </div>
+
+        <div>
+          <label class="block font-label-sm text-label-sm uppercase tracking-wider text-on-surface font-medium mb-1.5" for="plan-dias">
+            Duración (días) <span class="text-secondary">*</span>
+          </label>
+          <input type="number" id="plan-dias" required min="1" max="9999" placeholder="Ej: 30" class="editorial-input w-full px-4 py-3 text-sm placeholder:text-on-surface-variant/50">
+        </div>
+
+        <div>
+          <label class="block font-label-sm text-label-sm uppercase tracking-wider text-on-surface font-medium mb-1.5" for="plan-precio">
+            Precio (Gs) <span class="text-secondary">*</span>
+          </label>
+          <input type="number" id="plan-precio" required min="0" step="100" placeholder="Ej: 25000" class="editorial-input w-full px-4 py-3 text-sm placeholder:text-on-surface-variant/50">
+        </div>
+
+        <div class="pt-4 border-t border-outline-variant/20 flex items-center justify-end gap-3">
+          <button type="button" onclick="cerrarModal()" class="px-5 py-2.5 rounded-lg border border-outline-variant text-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer">Cancelar</button>
+          <button type="submit" class="px-6 py-2.5 rounded-lg bg-primary hover:bg-primary-fixed text-on-primary font-label-md text-label-md font-bold uppercase tracking-wider transition-all flex items-center gap-2 shadow-md active:scale-95 cursor-pointer">
+            <span>Guardar</span>
+            <span class="material-symbols-outlined text-[18px]">check</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/sidebar.js"></script>
+  <script>renderAppShell('gestion-planes')</script>
+  <script src="../js/gestion-planes.js"></script>
+</body>
+</html>

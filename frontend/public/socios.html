@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <script src="../js/auth.js"></script>
+  <script>FitnesGymAuth.requireAuth();</script>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>FitnesGym — Panel de Socios</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+    .editorial-input {
+      background-color: #161619;
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+    }
+    .editorial-input:focus {
+      background-color: #1a1a1f;
+      border-color: #e2e8f0;
+      box-shadow: none;
+      outline: none;
+    }
+    input[type="radio"]:checked + label {
+      border-color: #4edea3;
+      background-color: #1e1e24;
+    }
+    input[type="radio"]:checked + label .check-dot {
+      opacity: 1;
+      transform: scale(1);
+    }
+    input[type="radio"]:checked + label .plan-tag {
+      color: #ffffff;
+    }
+  </style>
+  <link href="../css/styles.css" rel="stylesheet"/>
+  <script src="../js/theme.js"></script>
+  <script>tailwind.config = window.FITNESSGYM_THEME;</script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-background font-body-md text-body-md text-on-surface antialiased">
+
+  <div id="app-shell"></div>
+
+  <div class="md:pl-64">
+    <!-- Top Header -->
+    <header class="fixed top-0 right-0 left-0 md:left-64 h-16 z-40 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/20 flex items-center justify-between gap-space-md px-gutter-desktop">
+      <div class="flex items-center gap-space-sm">
+        <a href="index.html" class="flex items-center gap-1.5 font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors">
+          <span class="material-symbols-outlined text-[18px]">arrow_back</span><span>Inicio</span>
+        </a>
+        <span class="text-outline/60">/</span>
+        <span class="font-label-md text-label-md text-on-surface font-semibold">Panel de Socios</span>
+      </div>
+      <div class="hidden sm:flex items-center gap-space-xs px-space-sm py-space-xs bg-surface-container rounded-lg">
+        <span class="h-2 w-2 rounded-full bg-primary animate-pulse"></span>
+        <span class="font-label-sm text-label-sm text-on-surface">REGISTRO</span>
+      </div>
+    </header>
+
+    <!-- Main -->
+    <main class="w-full min-h-screen bg-surface pt-32 md:pt-16 px-gutter-desktop py-space-lg flex items-start justify-center">
+      <div class="w-full max-w-2xl">
+        <div class="bg-surface-container-low rounded-lg overflow-hidden border border-outline-variant/20 shadow-sm">
+          <!-- Card Header -->
+          <div class="p-space-lg border-b border-outline-variant/20 bg-surface-container-lowest">
+            <div class="flex items-center justify-between mb-space-sm">
+              <span class="font-label-sm text-label-sm tracking-widest uppercase text-on-surface-variant">Registro — Nuevo Socio</span>
+              <span class="font-label-sm text-label-sm text-on-surface-variant">SEC. 01 / 02</span>
+            </div>
+            <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Agregar Nuevo Socio</h1>
+            <p class="mt-1 font-body-sm text-body-sm text-on-surface-variant max-w-lg">
+              Ingresá la información personal para dar de alta la ficha y habilitar la suscripción correspondiente.
+            </p>
+          </div>
+
+          <!-- Formulario -->
+          <form action="#" class="p-space-lg space-y-space-lg" id="socio-form" method="POST">
+
+            <!-- SECTION: Personal Information -->
+            <section class="space-y-5" data-purpose="datos-del-socio">
+              <div class="flex items-baseline justify-between border-b border-outline-variant/20 pb-2">
+                <h2 class="font-label-sm text-label-sm tracking-widest uppercase text-on-surface-variant">01. Datos Personales</h2>
+                <span class="font-label-sm text-label-sm text-on-surface-variant">Requerido (*)</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                  <label class="block font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-2" for="nombre">
+                    Nombre <span class="text-on-surface">*</span>
+                  </label>
+                  <input class="w-full bg-surface-container-lowest text-on-surface px-3.5 py-3 rounded-lg placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-1 focus:ring-primary" id="nombre" name="nombre" placeholder="Matías" required="" type="text">
+                </div>
+                <div>
+                  <label class="block font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-2" for="apellido">
+                    Apellido <span class="text-on-surface">*</span>
+                  </label>
+                  <input class="w-full bg-surface-container-lowest text-on-surface px-3.5 py-3 rounded-lg placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-1 focus:ring-primary" id="apellido" name="apellido" placeholder="Gómez" required="" type="text">
+                </div>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                  <label class="block font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-2" for="telefono">
+                    Teléfono de Contacto
+                  </label>
+                  <input class="w-full bg-surface-container-lowest text-on-surface px-3.5 py-3 rounded-lg placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-1 focus:ring-primary" id="telefono" name="telefono" placeholder="+54 9 11 4820-0000" type="tel">
+                </div>
+                <div>
+                  <label class="block font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-2" for="email">
+                    Correo Electrónico
+                  </label>
+                  <input class="w-full bg-surface-container-lowest text-on-surface px-3.5 py-3 rounded-lg placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-1 focus:ring-primary" id="email" name="email" placeholder="ejemplo@correo.com" type="email">
+                </div>
+              </div>
+            </section>
+
+            <!-- SECTION: Membership Details -->
+            <section class="space-y-6" data-purpose="membresia">
+              <div class="flex items-baseline justify-between border-b border-outline-variant/20 pb-2">
+                <h2 class="font-label-sm text-label-sm tracking-widest uppercase text-on-surface-variant">02. Plan de Membresía</h2>
+                <span class="font-label-sm text-label-sm text-on-surface-variant">Selección obligatoria</span>
+              </div>
+              <div>
+                <span class="block font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-3">
+                  Seleccionar Plan <span class="text-on-surface">*</span>
+                </span>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="planes-container">
+                  <p class="text-xs text-on-surface-variant col-span-3">Cargando planes...</p>
+                </div>
+                <p class="mt-3 font-body-sm text-body-sm text-on-surface-variant">Monto total percibido al momento de la inscripción.</p>
+              </div>
+            </section>
+
+            <!-- Botones y mensaje -->
+            <div class="space-y-4 pt-space-md border-t border-outline-variant/20">
+              <div class="flex flex-col-reverse sm:flex-row items-center justify-between gap-4">
+                <button class="w-full sm:w-auto px-5 py-3 font-label-md text-label-md uppercase tracking-wider text-on-surface-variant hover:text-on-surface transition-colors text-center cursor-pointer" type="button" onclick="window.location.href='gestion-socios.html'">
+                  ← Cancelar y volver
+                </button>
+                <button class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-3.5 rounded-lg font-label-md text-label-md font-bold uppercase tracking-wide bg-primary text-on-primary hover:bg-primary-fixed active:scale-[0.99] transition-all cursor-pointer shadow-sm" type="submit">
+                  <span>Registrar socio</span>
+                  <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                </button>
+              </div>
+              <p id="mensaje-resultado" class="text-xs font-mono"></p>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/sidebar.js"></script>
+  <script>renderAppShell('socios')</script>
+  <script src="../js/api.js"></script>
+  <script src="../js/socios.js"></script>
+</body>
+</html>

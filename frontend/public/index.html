@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <script src="../js/auth.js"></script>
+  <script>FitnesGymAuth.requireAuth();</script>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>FitnesGym — Panel Principal</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+  <link href="../css/styles.css" rel="stylesheet"/>
+  <script src="../js/theme.js"></script>
+  <script>tailwind.config = window.FITNESSGYM_THEME;</script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-background font-body-md text-body-md text-on-surface">
+
+  <!-- ============================================================ -->
+  <!-- SIDEBAR + NAV MÓVIL (inyectados por frontend/js/sidebar.js) -->
+  <!-- ============================================================ -->
+  <div id="app-shell"></div>
+
+  <!-- ============================================================ -->
+  <!-- COLUMNA PRINCIPAL -->
+  <!-- ============================================================ -->
+  <div class="md:pl-64">
+
+    <!-- Top Header -->
+    <header class="fixed top-0 right-0 left-0 md:left-64 h-16 z-40 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+      <div class="h-16 w-full px-gutter-desktop flex items-center justify-between gap-space-md">
+        <div class="flex items-center gap-space-md">
+          <span class="font-headline-md text-headline-md text-on-surface">FitnesGym</span>
+        </div>
+        <div class="flex items-center gap-space-sm">
+          <button class="flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container hover:bg-surface-container-high transition-all text-on-surface-variant hover:text-on-surface cursor-pointer" id="btn-sync" onclick="syncAlertas()">
+            <span class="material-symbols-outlined text-[18px] text-primary" id="sync-icon">sync</span>
+            <span class="font-label-md text-label-md">Sincronizar</span>
+          </button>
+          <button class="flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container hover:bg-surface-container-high transition-all text-on-surface-variant hover:text-on-surface cursor-pointer" onclick="exportarReporte()">
+            <span class="material-symbols-outlined text-[18px]">download</span>
+            <span class="font-label-md text-label-md">Exportar CSV</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main -->
+    <main class="w-full pt-32 md:pt-16 bg-surface min-h-screen px-gutter-desktop py-space-lg">
+      <div class="flex flex-col w-full gap-space-lg">
+
+        <!-- Page Header -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+          <div class="flex flex-col gap-space-xs">
+            <div class="flex items-center gap-space-sm">
+              <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Panel Principal</h1>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-primary-container text-on-primary-container">Dashboard</span>
+            </div>
+            <p class="font-body-md text-body-md text-on-surface-variant">Centro de control del gimnasio: resumen de actividad y acceso a todos los módulos.</p>
+          </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- TARJETAS DE ESTADÍSTICAS -->
+        <!-- ============================================================ -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-md">
+          <div class="relative overflow-hidden bg-surface-container-low rounded-lg p-space-md flex flex-col justify-between gap-space-md shadow-sm">
+            <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-primary"></div>
+            <div class="flex items-start justify-between pl-space-xs">
+              <div class="flex flex-col">
+                <span class="font-label-sm text-label-sm uppercase tracking-wider text-primary">Socios Activos</span>
+                <span class="font-body-sm text-body-sm text-on-surface-variant">Con membresía vigente</span>
+              </div>
+              <span class="material-symbols-outlined text-[20px] text-primary">group</span>
+            </div>
+            <div class="flex items-baseline gap-space-sm pl-space-xs">
+              <span class="font-headline-xl text-headline-xl font-black text-on-surface leading-none" id="contador-socios-activos">0</span>
+              <span class="font-label-md text-label-md text-on-surface-variant">socios</span>
+            </div>
+          </div>
+          <div class="relative overflow-hidden bg-surface-container-low rounded-lg p-space-md flex flex-col justify-between gap-space-md shadow-sm">
+            <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-secondary-container"></div>
+            <div class="flex items-start justify-between pl-space-xs">
+              <div class="flex flex-col">
+                <span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">Vencidas</span>
+                <span class="font-body-sm text-body-sm text-on-surface-variant">Acción urgente requerida</span>
+              </div>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-secondary-container text-on-secondary-container">URGENTE</span>
+            </div>
+            <div class="flex items-baseline gap-space-sm pl-space-xs">
+              <span class="font-headline-xl text-headline-xl font-black text-secondary leading-none" id="contador-vencidos">0</span>
+              <span class="font-label-md text-label-md text-secondary/80">socios vencidos</span>
+            </div>
+          </div>
+          <div class="relative overflow-hidden bg-surface-container-low rounded-lg p-space-md flex flex-col justify-between gap-space-md shadow-sm">
+            <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-tertiary-container"></div>
+            <div class="flex items-start justify-between pl-space-xs">
+              <div class="flex flex-col">
+                <span class="font-label-sm text-label-sm uppercase tracking-wider text-tertiary">Por Vencer</span>
+                <span class="font-body-sm text-body-sm text-on-surface-variant">Próximos vencimientos (1 a 4 días)</span>
+              </div>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-tertiary-container text-on-tertiary-container">≤ 4 DÍAS</span>
+            </div>
+            <div class="flex items-baseline gap-space-sm pl-space-xs">
+              <span class="font-headline-xl text-headline-xl font-black text-tertiary leading-none" id="contador-por-vencer">0</span>
+              <span class="font-label-md text-label-md text-tertiary/80">socios a notificar</span>
+            </div>
+          </div>
+          <div class="relative overflow-hidden bg-surface-container-low rounded-lg p-space-md flex flex-col justify-between gap-space-md shadow-sm">
+            <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-primary-fixed-dim"></div>
+            <div class="flex items-start justify-between pl-space-xs">
+              <div class="flex flex-col">
+                <span class="font-label-sm text-label-sm uppercase tracking-wider text-primary">Total a Gestionar</span>
+                <span class="font-body-sm text-body-sm text-on-surface-variant">Socios pendientes de regularización</span>
+              </div>
+              <span class="material-symbols-outlined text-[20px] text-primary">assignment_late</span>
+            </div>
+            <div class="flex items-baseline gap-space-sm pl-space-xs">
+              <span class="font-headline-xl text-headline-xl font-black text-on-surface leading-none" id="contador-total">0</span>
+              <span class="font-label-md text-label-md text-on-surface-variant">socios en lista</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Barra compacta de stock crítico -->
+        <a href="productos.html" class="group flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm rounded-lg bg-surface-container-low p-space-md shadow-sm border border-outline-variant/20 hover:border-primary/50 transition-all">
+          <div class="flex items-center gap-space-sm">
+            <span class="w-10 h-10 rounded-lg bg-primary-container/40 text-primary-fixed-dim flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[22px]">inventory</span></span>
+            <div class="flex flex-col">
+              <span class="font-label-sm text-label-sm uppercase tracking-wider text-primary-fixed-dim">Stock Crítico</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">Productos con ≤ 5 unidades disponibles</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-space-md">
+            <span class="font-headline-lg text-headline-lg font-black text-on-surface leading-none" id="contador-stock-bajo">0</span>
+            <span class="flex items-center gap-1 font-label-md text-label-md text-primary">
+              <span>Reponer stock</span>
+              <span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </span>
+          </div>
+        </a>
+
+        <!-- ============================================================ -->
+        <!-- ALERTAS DE MENSUALIDADES -->
+        <!-- ============================================================ -->
+        <div class="flex flex-col gap-space-sm pt-space-xs">
+          <div class="flex items-center gap-space-sm">
+            <span class="material-symbols-outlined text-[20px] text-secondary">warning</span>
+            <h2 class="font-headline-sm text-headline-sm text-on-surface tracking-tight">Alertas de Mensualidades</h2>
+            <div class="h-px flex-1 bg-outline-variant/30 rounded"></div>
+          </div>
+        </div>
+
+        <!-- Filter Controls & Search Bar -->
+        <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-space-md bg-surface-container-low p-space-sm rounded-lg">
+          <div class="flex items-center gap-space-xs overflow-x-auto pb-1 lg:pb-0" id="filter-tabs">
+            <button class="tab-pill px-space-md py-space-xs rounded font-label-md text-label-md transition-colors bg-primary-container text-on-primary-container font-bold flex items-center gap-1.5 cursor-pointer" data-filter="TODOS" onclick="filtrarEstado('TODOS')">
+              <span>Todos</span>
+              <span class="px-1.5 py-0.2 rounded bg-black/20 text-xs font-semibold" id="badge-total">0</span>
+            </button>
+            <button class="tab-pill px-space-md py-space-xs rounded font-label-md text-label-md transition-colors text-on-surface-variant hover:bg-surface-container hover:text-on-surface flex items-center gap-1.5 cursor-pointer" data-filter="VENCIDO" onclick="filtrarEstado('VENCIDO')">
+              <span>Vencidos</span>
+              <span class="px-1.5 py-0.2 rounded bg-secondary-container text-on-secondary-container text-xs font-semibold" id="badge-vencidos">0</span>
+            </button>
+            <button class="tab-pill px-space-md py-space-xs rounded font-label-md text-label-md transition-colors text-on-surface-variant hover:bg-surface-container hover:text-on-surface flex items-center gap-1.5 cursor-pointer" data-filter="POR VENCER" onclick="filtrarEstado('POR VENCER')">
+              <span>Por Vencer</span>
+              <span class="px-1.5 py-0.2 rounded bg-tertiary-container text-on-tertiary-container text-xs font-semibold" id="badge-por-vencer">0</span>
+            </button>
+          </div>
+          <div class="relative flex-1 lg:max-w-md">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+            <input class="w-full pl-10 pr-10 py-space-sm bg-surface-container-lowest text-on-surface font-body-sm text-body-sm rounded focus:outline-none placeholder:text-outline" id="buscador-alertas" oninput="handleSearch(this.value)" placeholder="Buscar por socio, teléfono o plan..." type="text"/>
+            <button class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface" id="btn-clear-search" onclick="clearSearch()">
+              <span class="material-symbols-outlined text-[16px]">close</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Main Table Section -->
+        <div class="w-full bg-surface-container-low rounded-lg overflow-hidden flex flex-col shadow-sm">
+          <div class="overflow-x-auto w-full">
+            <table class="w-full text-left border-collapse min-w-[900px]">
+              <thead>
+                <tr class="bg-surface-container-lowest text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+                  <th class="py-space-sm px-space-md w-[28%]">Socio / Contacto</th>
+                  <th class="py-space-sm px-space-md w-[20%]">Plan</th>
+                  <th class="py-space-sm px-space-md w-[15%]">Fecha Vencimiento</th>
+                  <th class="py-space-sm px-space-md w-[12%]">Días Restantes</th>
+                  <th class="py-space-sm px-space-md w-[13%]">Estado</th>
+                  <th class="py-space-sm px-space-md w-[12%] text-right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-surface-container" id="alertas-container">
+                <tr><td colspan="6" class="py-6 text-center text-on-surface-variant">Cargando alertas...</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- Empty State -->
+          <div class="hidden p-space-xl flex flex-col items-center justify-center text-center" id="empty-state">
+            <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-space-sm">
+              <span class="material-symbols-outlined text-[32px] text-primary">check_circle</span>
+            </div>
+            <h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Todo al día, no hay alertas pendientes</h3>
+            <p class="font-body-md text-body-md text-on-surface-variant max-w-sm">Todas las cuotas se encuentran vigentes o no hay socios con vencimientos en los próximos 4 días.</p>
+          </div>
+          <div class="px-space-md py-space-sm bg-surface-container-lowest flex flex-col sm:flex-row items-center justify-between gap-space-sm">
+            <span class="font-label-sm text-label-sm text-on-surface-variant" id="label-conteo-filtrado">Mostrando 0 registros</span>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MODAL DE COBRO -->
+  <!-- ============================================================ -->
+  <div class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-space-md" id="modal-cobro">
+    <div class="bg-surface-container w-full max-w-md rounded-lg overflow-hidden shadow-2xl">
+      <div class="px-space-md py-space-sm bg-surface-container-highest flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-[20px]">point_of_sale</span>
+          <span class="font-headline-sm text-headline-sm text-on-surface">Registrar Pago</span>
+        </div>
+        <button class="text-on-surface-variant hover:text-on-surface" onclick="cerrarModalCobro()">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+      <div class="p-space-md flex flex-col gap-space-md">
+        <div class="p-space-sm bg-surface-container-low rounded flex flex-col gap-1">
+          <span class="font-label-sm text-label-sm uppercase text-outline">Socio</span>
+          <span class="font-headline-sm text-headline-sm text-on-surface font-bold" id="modal-socio-nombre">--</span>
+        </div>
+        <div class="flex flex-col gap-space-xs">
+          <label class="font-label-sm text-label-sm text-on-surface-variant">Plan a renovar</label>
+          <select class="w-full bg-surface-container-lowest text-on-surface py-2 px-3 rounded focus:outline-none focus:ring-1 focus:ring-primary" id="modal-plan-selector" onchange="actualizarMontoSugerido()">
+            <option value="">Cargando planes...</option>
+          </select>
+        </div>
+        <div class="flex flex-col gap-space-xs">
+          <label class="font-label-sm text-label-sm text-on-surface-variant">Monto a cobrar</label>
+          <div class="relative">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-outline font-bold text-sm">Gs</span>
+            <input class="w-full bg-surface-container-lowest text-on-surface py-2 pl-10 pr-3 font-headline-sm text-headline-sm font-bold rounded focus:outline-none focus:ring-1 focus:ring-primary" id="modal-monto" type="number" min="0"/>
+          </div>
+        </div>
+        <p class="text-xs" id="modal-mensaje"></p>
+        <div class="flex items-center justify-end gap-space-sm pt-space-xs">
+          <button class="px-space-md py-space-sm rounded font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high" onclick="cerrarModalCobro()">Cancelar</button>
+          <button class="px-space-md py-space-sm rounded bg-primary text-on-primary font-label-md text-label-md font-bold hover:bg-primary-fixed" id="btn-confirmar-cobro" onclick="confirmarCobro()">Confirmar Pago</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/sidebar.js"></script>
+  <script>renderAppShell('inicio')</script>
+  <script src="../js/index.js"></script>
+</body>
+</html>

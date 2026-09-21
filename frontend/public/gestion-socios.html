@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <script src="../js/auth.js"></script>
+  <script>FitnesGymAuth.requireAuth();</script>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>FitnesGym — Gestión de Socios</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+    .editorial-input {
+      background-color: #0e0e11;
+      color: #e4e1e6;
+      border: 1px solid #2e2e38;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+    .editorial-input:focus {
+      outline: none;
+      border-color: #4edea3;
+      box-shadow: 0 0 0 1px #4edea3;
+    }
+  </style>
+  <link href="../css/styles.css" rel="stylesheet"/>
+  <script src="../js/theme.js"></script>
+  <script>tailwind.config = window.FITNESSGYM_THEME;</script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-background font-body-md text-body-md text-on-surface antialiased">
+
+  <div id="app-shell"></div>
+
+  <div class="md:pl-64">
+    <!-- Top Header -->
+    <header class="fixed top-0 right-0 left-0 md:left-64 h-16 z-40 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/20 flex items-center justify-between gap-space-md px-gutter-desktop">
+      <div class="flex items-center gap-space-sm">
+        <a href="index.html" class="flex items-center gap-1.5 font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors">
+          <span class="material-symbols-outlined text-[18px]">arrow_back</span><span>Inicio</span>
+        </a>
+        <span class="text-outline/60">/</span>
+        <a href="socios.html" class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors">Panel Socios</a>
+        <span class="text-outline/60">/</span>
+        <span class="font-label-md text-label-md text-on-surface font-semibold">Gestión de Socios</span>
+      </div>
+      <div class="flex items-center gap-space-md">
+        <div class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container">
+          <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+          <span class="font-label-sm text-label-sm text-on-surface tracking-wider">V2.4 ONLINE</span>
+        </div>
+        <span id="fecha-actual" class="hidden sm:inline-flex font-label-sm text-label-sm text-on-surface-variant tracking-widest uppercase border border-outline-variant/30 bg-surface-container px-3 py-1.5 rounded-full"></span>
+      </div>
+    </header>
+
+    <!-- Main -->
+    <main class="w-full min-h-screen bg-surface pt-32 md:pt-16 px-gutter-desktop py-space-lg">
+      <div class="flex flex-col w-full gap-space-md">
+
+        <!-- Title & Module Header -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+          <div class="flex flex-col gap-space-xs">
+            <div class="flex items-center gap-space-sm">
+              <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Gestión de Socios</h1>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-primary-container text-on-primary-container">Directorio</span>
+            </div>
+            <p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">Consultá el directorio completo de socios, sus fechas de membresía y editá los datos personales al instante.</p>
+          </div>
+          <a href="socios.html" class="inline-flex items-center justify-center gap-2 px-5 h-11 rounded-lg bg-primary text-on-primary font-label-md text-label-md font-bold uppercase tracking-wide hover:bg-primary-fixed transition-all shadow-sm active:scale-[0.98]">
+            <span class="material-symbols-outlined text-[18px]">person_add</span>
+            Registrar Socios
+          </a>
+        </div>
+
+        <!-- Feedback Message Container -->
+        <div id="mensaje-resultado" class="hidden my-4 p-4 rounded-lg text-xs font-mono tracking-wide flex items-center justify-between border"></div>
+
+        <!-- Quick Stats Bar -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-space-md">
+          <div class="relative overflow-hidden bg-surface-container-low rounded-lg p-space-md flex flex-col justify-between gap-space-md shadow-sm">
+            <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-primary"></div>
+            <span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant pl-space-xs">Total Socios</span>
+            <div id="stat-total" class="font-headline-xl text-headline-xl font-black text-on-surface leading-none pl-space-xs">0</div>
+            <span class="font-body-sm text-body-sm text-on-surface-variant pl-space-xs">Registrados en sistema</span>
+          </div>
+          <div class="relative overflow-hidden bg-surface-container-low rounded-lg p-space-md flex flex-col justify-between gap-space-md shadow-sm">
+            <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-primary"></div>
+            <span class="font-label-sm text-label-sm uppercase tracking-wider text-primary pl-space-xs">Socios Activos</span>
+            <div id="stat-activos" class="font-headline-xl text-headline-xl font-black text-primary leading-none pl-space-xs">0</div>
+            <span class="font-body-sm text-body-sm text-on-surface-variant pl-space-xs">Independiente de la fecha</span>
+          </div>
+          <div class="relative overflow-hidden bg-surface-container-low rounded-lg p-space-md flex flex-col justify-between gap-space-md shadow-sm border border-tertiary-container/30">
+            <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-tertiary-container"></div>
+            <div class="flex items-center justify-between pl-space-xs">
+              <span class="flex items-center gap-2 font-label-sm text-label-sm uppercase tracking-wider text-tertiary">Alerta Mensualidad</span>
+              <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+            </div>
+            <div id="stat-vencidos" class="font-headline-xl text-headline-xl font-black text-tertiary leading-none pl-space-xs">0</div>
+            <span class="font-body-sm text-body-sm text-tertiary/80 pl-space-xs">Vencidos o por vencer (&le; 4 días)</span>
+          </div>
+          <div class="relative overflow-hidden bg-surface-container-low rounded-lg p-space-md flex flex-col justify-between gap-space-md shadow-sm">
+            <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-surface-container-high"></div>
+            <span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant pl-space-xs">Inactivos / De Baja</span>
+            <div id="stat-inactivos" class="font-headline-xl text-headline-xl font-black text-on-surface-variant leading-none pl-space-xs">0</div>
+            <span class="font-body-sm text-body-sm text-on-surface-variant pl-space-xs">Historial preservado</span>
+          </div>
+        </div>
+
+        <!-- Filters & Search Toolbar -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-surface-container-low p-space-sm rounded-lg">
+          <div class="relative w-full sm:w-80">
+            <span class="material-symbols-outlined text-[18px] absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+            <input
+              id="buscador-socio"
+              type="text"
+              placeholder="Buscar por nombre, apellido, teléfono o email..."
+              class="w-full pl-9 pr-4 py-2 bg-surface-container-lowest rounded-lg text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-1 focus:ring-primary transition-colors"
+              onkeyup="filtrarSocios()">
+          </div>
+          <div class="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
+            <label class="flex items-center gap-2 cursor-pointer select-none font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors">
+              <input type="checkbox" id="toggle-inactivos" class="w-3.5 h-3.5 rounded border-outline-variant bg-surface-container-lowest text-primary focus:ring-0 cursor-pointer" onchange="filtrarSocios()">
+              <span>Mostrar socios dados de baja</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Socios Table -->
+        <div class="bg-surface-container-low rounded-lg overflow-hidden shadow-sm">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[900px]">
+              <thead>
+                <tr class="bg-surface-container-lowest text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+                  <th class="py-space-sm px-space-md w-16">ID</th>
+                  <th class="py-space-sm px-space-md">Socio</th>
+                  <th class="py-space-sm px-space-md">Contacto</th>
+                  <th class="py-space-sm px-space-md">Plan</th>
+                  <th class="py-space-sm px-space-md">Vencimiento</th>
+                  <th class="py-space-sm px-space-md text-center">Estado</th>
+                  <th class="py-space-sm px-space-md text-right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="socios-container" class="divide-y divide-surface-container text-sm">
+                <tr>
+                  <td colspan="7" class="py-6 text-center text-on-surface-variant">Cargando socios...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="px-space-md py-space-sm bg-surface-container-lowest border-t border-outline-variant/20 flex flex-col sm:flex-row items-center justify-between font-body-sm text-body-sm text-on-surface-variant gap-2">
+            <span>Datos personales y fechas de membresía editables desde el modal.</span>
+            <span>Bajas lógicas protegidas: Los registros no se eliminan del sistema.</span>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- MODAL: EDICIÓN DE SOCIO -->
+  <div id="modal-socio" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-surface-container border border-outline-variant/40 w-full max-w-xl rounded-lg shadow-2xl overflow-hidden">
+      <div class="px-space-lg py-space-md border-b border-outline-variant/20 flex items-center justify-between bg-surface-container-highest">
+        <div>
+          <span class="font-label-sm text-label-sm text-on-surface-variant tracking-[0.2em] uppercase">Ficha &bull; Actualizar Datos</span>
+          <h3 class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight mt-0.5" id="modal-titulo">Editar Socio</h3>
+        </div>
+        <button onclick="cerrarModal()" class="w-8 h-8 rounded-lg bg-surface-container-highest hover:bg-surface-bright text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+
+      <form id="socio-form-edit" onsubmit="guardarSocio(event)" class="p-space-lg space-y-5">
+        <input type="hidden" id="socio-id-editing">
+
+        <div class="bg-surface-container-low border border-outline-variant/30 rounded-lg p-4">
+          <div class="font-label-sm text-label-sm tracking-widest uppercase text-on-surface-variant mb-3 flex items-center justify-between">
+            <span>Membresía Actual &bull; Editable</span>
+            <span id="modal-plan" class="font-label-md text-label-md font-semibold text-primary">—</span>
+          </div>
+          <input type="hidden" id="membresia-id-editing">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-medium mb-1.5" for="edit-fecha-inicio">Fecha Inicio</label>
+              <input type="date" id="edit-fecha-inicio" class="editorial-input w-full px-4 py-3 text-sm [color-scheme:dark]">
+            </div>
+            <div>
+              <label class="block font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-medium mb-1.5" for="edit-fecha-fin">Fecha Vencimiento</label>
+              <input type="date" id="edit-fecha-fin" class="editorial-input w-full px-4 py-3 text-sm [color-scheme:dark]">
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block font-label-sm text-label-sm uppercase tracking-wider text-on-surface font-medium mb-1.5" for="edit-nombre">Nombre <span class="text-secondary">*</span></label>
+            <input type="text" id="edit-nombre" required maxlength="100" placeholder="Matías" class="editorial-input w-full px-4 py-3 text-sm placeholder:text-on-surface-variant/50">
+          </div>
+          <div>
+            <label class="block font-label-sm text-label-sm uppercase tracking-wider text-on-surface font-medium mb-1.5" for="edit-apellido">Apellido <span class="text-secondary">*</span></label>
+            <input type="text" id="edit-apellido" required maxlength="100" placeholder="Gómez" class="editorial-input w-full px-4 py-3 text-sm placeholder:text-on-surface-variant/50">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-medium mb-1.5" for="edit-telefono">Teléfono de Contacto</label>
+            <input type="tel" id="edit-telefono" maxlength="30" placeholder="+595 981 000-000" class="editorial-input w-full px-4 py-3 text-sm placeholder:text-on-surface-variant/50">
+          </div>
+          <div>
+            <label class="block font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-medium mb-1.5" for="edit-email">Correo Electrónico</label>
+            <input type="email" id="edit-email" maxlength="120" placeholder="ejemplo@correo.com" class="editorial-input w-full px-4 py-3 text-sm placeholder:text-on-surface-variant/50">
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-outline-variant/20 flex items-center justify-end gap-3">
+          <button type="button" onclick="cerrarModal()" class="px-5 py-2.5 rounded-lg border border-outline-variant text-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer">Cancelar</button>
+          <button type="submit" class="px-6 py-2.5 rounded-lg bg-primary hover:bg-primary-fixed text-on-primary font-label-md text-label-md font-bold uppercase tracking-wider transition-all flex items-center gap-2 shadow-md active:scale-95 cursor-pointer">
+            <span>Guardar Cambios</span>
+            <span class="material-symbols-outlined text-[18px]">check</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/sidebar.js"></script>
+  <script>renderAppShell('gestion-socios')</script>
+  <script src="../js/gestion-socios.js"></script>
+</body>
+</html>
