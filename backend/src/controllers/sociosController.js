@@ -204,11 +204,13 @@ const toggleEstadoSocio = async (req, res) => {
 };
 
 const registrarSocio = async (req, res) => {
-  const { nombre, apellido, telefono, email, id_plan, monto_pagado } = req.body;
+  const { nombre, apellido, telefono, email, id_plan, monto_pagado, metodo_pago } = req.body;
 
   if (!nombre || !apellido || !id_plan || !monto_pagado) {
     return res.status(400).json({ error: 'Faltan datos obligatorios' });
   }
+
+  const metodo = (metodo_pago && String(metodo_pago).trim()) || 'Efectivo';
 
   const client = await pool.connect();
   try {
@@ -230,10 +232,10 @@ const registrarSocio = async (req, res) => {
     const idSocio = socioResult.rows[0].id_socio;
 
     const membresiaResult = await client.query(
-      `INSERT INTO membresias (id_socio, id_plan, fecha_inicio, fecha_fin, monto_pagado)
-       VALUES ($1, $2, CURRENT_DATE, CURRENT_DATE + $3::int, $4)
+      `INSERT INTO membresias (id_socio, id_plan, fecha_inicio, fecha_fin, monto_pagado, metodo_pago)
+       VALUES ($1, $2, CURRENT_DATE, CURRENT_DATE + $3::int, $4, $5)
        RETURNING *`,
-      [idSocio, id_plan, duracionDias, monto_pagado]
+      [idSocio, id_plan, duracionDias, monto_pagado, metodo]
     );
 
     await client.query('COMMIT');

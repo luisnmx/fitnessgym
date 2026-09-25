@@ -2,7 +2,7 @@
 // Cada página incluye un marcador <div id="app-shell"></div> y llama:
 //   <script src="../js/sidebar.js"></script>
 //   <script>renderAppShell('key-de-la-pagina-actual')</script>
-// Keys válidas: inicio, socios, gestion-socios, gestion-planes, productos, ventas, historial-ventas.
+// Keys válidas: inicio, socios, gestion-socios, gestion-planes, productos, ventas, historial-ventas, ingresos.
 (function () {
   const NAV = [
     { key: 'inicio', label: 'Inicio', icon: 'home', href: 'index.html' },
@@ -12,6 +12,7 @@
     { key: 'productos', label: 'Productos', icon: 'inventory_2', href: 'productos.html' },
     { key: 'ventas', label: 'POS', icon: 'point_of_sale', href: 'ventas.html' },
     { key: 'historial-ventas', label: 'Historial de Ventas', icon: 'receipt_long', href: 'historial-ventas.html' },
+    { key: 'ingresos', label: 'Ingresos por Membresías', icon: 'payments', href: 'ingresos-membresias.html' },
   ];
 
   function navLinkDesktop(item, active) {

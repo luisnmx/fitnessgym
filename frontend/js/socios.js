@@ -66,6 +66,7 @@ async function registrarSocio(event) {
     email: document.getElementById('email').value.trim(),
     id_plan: idPlanSeleccionado.value,
     monto_pagado: planSeleccionado ? planSeleccionado.precio : null,
+    metodo_pago: document.getElementById('metodo-pago').value,
   };
 
   try {
