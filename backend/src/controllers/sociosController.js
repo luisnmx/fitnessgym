@@ -168,6 +168,9 @@ const updateSocio = async (req, res) => {
     });
   } catch (error) {
     await client.query('ROLLBACK');
+    if (error.code === '23505') {
+      return res.status(409).json({ error: 'Ya existe otro socio registrado con ese correo electrónico' });
+    }
     console.error('Error al actualizar socio:', error);
     res.status(500).json({ error: 'Error al actualizar el socio' });
   } finally {
@@ -247,6 +250,9 @@ const registrarSocio = async (req, res) => {
 
   } catch (error) {
     await client.query('ROLLBACK');
+    if (error.code === '23505') {
+      return res.status(409).json({ error: 'Ya existe un socio registrado con ese correo electrónico' });
+    }
     console.error('Error al registrar socio:', error);
     res.status(500).json({ error: 'Error al registrar el socio' });
   } finally {
